@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>URL Shortener</title>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                margin: 0;
+                padding: 0;
+                background-color: #f2f2f2;
+            }
+            .container {
+                width: 80%;
+                margin: 50px auto;
+                padding: 20px;
+                background-color: #fff;
+                border-radius: 8px;
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            }
+            h1 {
+                text-align: center;
+                color: #333;
+            }
+            form {
+                text-align: center;
+            }
+            input[type="url"] {
+                width: 100%;
+                padding: 10px;
+                margin: 10px auto;
+                font-size: 16px;
+                border: 1px solid #ccc;
+                border-radius: 5px;
+                box-sizing: border-box; /* Include padding and border in width */
+            }
+            input[type="submit"] {
+                width: 100%;
+                background-color: #4caf50;
+                color: white;
+                padding: 10px 0;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+                font-size: 16px;
+            }
+            input[type="submit"]:hover {
+                background-color: #45a049;
+            }
+            #shortened-url {
+                text-align: center;
+                margin-top: 20px;
+            }
+            #shortened-url input[type="url"] {
+                width: 100%;
+                padding: 10px;
+                font-size: 16px;
+                border: 1px solid #ccc;
+                border-radius: 5px;
+                background-color: #f9f9f9;
+                pointer-events: none;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <h1>URL Shortener</h1>
+            <form id="url-form">
+                <input
+                    type="url"
+                    id="original-url"
+                    placeholder="Enter your long URL here"
+                    required
+                />
+                <br />
+                <input type="submit" value="Shorten URL" />
+            </form>
+            <div id="shortened-url" style="display: none">
+                <label for="shortened">Shortened URL:</label>
+                <input type="url" id="shortened" readonly />
+            </div>
+        </div>
+
+        <script>
+            document
+                .getElementById("url-form")
+                .addEventListener("submit", async function (event) {
+                    event.preventDefault();
+
+                    const originalUrl =
+                        document.getElementById("original-url").value;
+
+                    // Send the URL to your backend for shortening
+                    const response = await fetch("/shorten", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({ url: originalUrl }),
+                    });
+
+                    const data = await response.json();
+
+                    if (response.ok) {
+                        document.getElementById("shortened").value =
+                            data.shortenedUrl;
+                        document.getElementById("shortened-url").style.display =
+                            "block";
+                    } else {
+                        alert("Failed to shorten URL. Please try again later.");
+                    }
+                });
+        </script>
+    </body>
+</html>
