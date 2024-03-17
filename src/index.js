@@ -17,6 +17,7 @@ app.set("view engine", "ejs");
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
+app.use("/shorten", shortURLRoute);
 app.get("/:id", async (req, res) => {
     const id = req.params.id;
     
@@ -36,7 +37,6 @@ app.get("/", (req, res) => {
     res.render("index");
 });
 
-app.use("/shorten", shortURLRoute);
 
 const port = process.env.PORT || 3000;
 
